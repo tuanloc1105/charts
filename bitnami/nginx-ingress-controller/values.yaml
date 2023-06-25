@@ -161,8 +161,11 @@ dhParam: ""
 ## e.g:
 ## tcp:
 ##   8080: "default/example-tcp-svc:9000"
-##
-tcp: {}
+## 
+## kubectl create deployment nginx --image=nginx -n ingress-nginx
+## kubectl expose deployments/nginx --type=NodePort --name=nginx-svc --port=80 -n ingress-nginx
+tcp: 
+  7000: "ingress-nginx/nginx-svc:80"
 ## @param udp UDP service key:value pairs
 ## ref: https://github.com/kubernetes/contrib/tree/master/ingress/controllers/nginx/examples/udp
 ## e.g:
