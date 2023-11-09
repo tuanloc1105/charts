@@ -11,8 +11,10 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/phpmyadmin
+helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin
 ```
+
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 
 ## Introduction
 
@@ -22,20 +24,22 @@ As a portable web application written primarily in PHP, phpMyAdmin has become on
 
 Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
 
-Looking to use phpMyAdmin in production? Try [VMware Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
+Looking to use phpMyAdmin in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
 
 ## Prerequisites
 
-- Kubernetes 1.8+ with Beta APIs enabled
-- Helm 3.2.0+
+- Kubernetes 1.23+
+- Helm 3.8.0+
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/phpmyadmin
+helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin
 ```
+
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 
 The command deploys phpMyAdmin on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -74,81 +78,85 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ### phpMyAdmin parameters
 
-| Name                 | Description                                                                                                | Value                 |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------- |
-| `image.registry`     | phpMyAdmin image registry                                                                                  | `docker.io`           |
-| `image.repository`   | phpMyAdmin image repository                                                                                | `bitnami/phpmyadmin`  |
-| `image.tag`          | phpMyAdmin image tag (immutable tags are recommended)                                                      | `5.2.1-debian-11-r60` |
-| `image.digest`       | phpMyAdmin image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                  |
-| `image.pullPolicy`   | Image pull policy                                                                                          | `IfNotPresent`        |
-| `image.pullSecrets`  | Specify docker-registry secret names as an array                                                           | `[]`                  |
-| `image.debug`        | Enable phpmyadmin image debug mode                                                                         | `false`               |
-| `command`            | Override default container command (useful when using custom images)                                       | `[]`                  |
-| `args`               | Override default container args (useful when using custom images)                                          | `[]`                  |
-| `lifecycleHooks`     | for the phpmyadmin container(s) to automate configuration before or after startup                          | `{}`                  |
-| `extraEnvVars`       | Extra environment variables to be set on PhpMyAdmin container                                              | `[]`                  |
-| `extraEnvVarsCM`     | Name of a existing ConfigMap containing extra env vars                                                     | `""`                  |
-| `extraEnvVarsSecret` | Name of a existing Secret containing extra env vars                                                        | `""`                  |
+| Name                 | Description                                                                                                | Value                        |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `image.registry`     | phpMyAdmin image registry                                                                                  | `REGISTRY_NAME`              |
+| `image.repository`   | phpMyAdmin image repository                                                                                | `REPOSITORY_NAME/phpmyadmin` |
+| `image.digest`       | phpMyAdmin image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                         |
+| `image.pullPolicy`   | Image pull policy                                                                                          | `IfNotPresent`               |
+| `image.pullSecrets`  | Specify docker-registry secret names as an array                                                           | `[]`                         |
+| `image.debug`        | Enable phpmyadmin image debug mode                                                                         | `false`                      |
+| `command`            | Override default container command (useful when using custom images)                                       | `[]`                         |
+| `args`               | Override default container args (useful when using custom images)                                          | `[]`                         |
+| `lifecycleHooks`     | for the phpmyadmin container(s) to automate configuration before or after startup                          | `{}`                         |
+| `extraEnvVars`       | Extra environment variables to be set on PhpMyAdmin container                                              | `[]`                         |
+| `extraEnvVarsCM`     | Name of a existing ConfigMap containing extra env vars                                                     | `""`                         |
+| `extraEnvVarsSecret` | Name of a existing Secret containing extra env vars                                                        | `""`                         |
 
 ### phpMyAdmin deployment parameters
 
-| Name                                    | Description                                                                               | Value           |
-| --------------------------------------- | ----------------------------------------------------------------------------------------- | --------------- |
-| `hostAliases`                           | Deployment pod host aliases                                                               | `[]`            |
-| `containerPorts.http`                   | HTTP port to expose at container level                                                    | `8080`          |
-| `containerPorts.https`                  | HTTPS port to expose at container level                                                   | `8443`          |
-| `updateStrategy.type`                   | Strategy to use to update Pods                                                            | `RollingUpdate` |
-| `podSecurityContext.enabled`            | Enable phpMyAdmin pods' Security Context                                                  | `true`          |
-| `podSecurityContext.fsGroup`            | User ID for the container                                                                 | `1001`          |
-| `containerSecurityContext.enabled`      | Enable phpMyAdmin containers' Security Context                                            | `true`          |
-| `containerSecurityContext.runAsUser`    | Group ID for the volumes of the pod                                                       | `1001`          |
-| `containerSecurityContext.runAsNonRoot` | Set phpmyadmin container's Security Context runAsNonRoot                                  | `true`          |
-| `resources.limits`                      | The resources limits for the PhpMyAdmin container                                         | `{}`            |
-| `resources.requests`                    | The requested resources for the PhpMyAdmin container                                      | `{}`            |
-| `startupProbe.enabled`                  | Enable startupProbe                                                                       | `false`         |
-| `startupProbe.httpGet.path`             | Request path for startupProbe                                                             | `/`             |
-| `startupProbe.httpGet.port`             | Port for startupProbe                                                                     | `http`          |
-| `startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                    | `30`            |
-| `startupProbe.periodSeconds`            | Period seconds for startupProbe                                                           | `10`            |
-| `startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                          | `30`            |
-| `startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                        | `6`             |
-| `startupProbe.successThreshold`         | Success threshold for startupProbe                                                        | `1`             |
-| `livenessProbe.enabled`                 | Enable livenessProbe                                                                      | `true`          |
-| `livenessProbe.httpGet.path`            | Request path for livenessProbe                                                            | `/`             |
-| `livenessProbe.httpGet.port`            | Port for livenessProbe                                                                    | `http`          |
-| `livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                                   | `30`            |
-| `livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                          | `10`            |
-| `livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                         | `30`            |
-| `livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                       | `6`             |
-| `livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                       | `1`             |
-| `readinessProbe.enabled`                | Enable readinessProbe                                                                     | `true`          |
-| `readinessProbe.httpGet.path`           | Request path for readinessProbe                                                           | `/`             |
-| `readinessProbe.httpGet.port`           | Port for readinessProbe                                                                   | `http`          |
-| `readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                                  | `30`            |
-| `readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                         | `10`            |
-| `readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                        | `30`            |
-| `readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                      | `6`             |
-| `readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                      | `1`             |
-| `customStartupProbe`                    | Override default startup probe                                                            | `{}`            |
-| `customLivenessProbe`                   | Override default liveness probe                                                           | `{}`            |
-| `customReadinessProbe`                  | Override default readiness probe                                                          | `{}`            |
-| `podLabels`                             | Extra labels for PhpMyAdmin pods                                                          | `{}`            |
-| `podAnnotations`                        | Annotations for PhpMyAdmin pods                                                           | `{}`            |
-| `podAffinityPreset`                     | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`       | `""`            |
-| `podAntiAffinityPreset`                 | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`  | `soft`          |
-| `nodeAffinityPreset.type`               | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard` | `""`            |
-| `nodeAffinityPreset.key`                | Node label key to match. Ignored if `affinity` is set.                                    | `""`            |
-| `nodeAffinityPreset.values`             | Node label values to match. Ignored if `affinity` is set.                                 | `[]`            |
-| `affinity`                              | Affinity for pod assignment. Evaluated as a template.                                     | `{}`            |
-| `nodeSelector`                          | Node labels for pod assignment. Evaluated as a template.                                  | `{}`            |
-| `tolerations`                           | Tolerations for pod assignment. Evaluated as a template.                                  | `[]`            |
-| `priorityClassName`                     | phpmyadmin pods' priorityClassName                                                        | `""`            |
-| `schedulerName`                         | Name of the k8s scheduler (other than default)                                            | `""`            |
-| `topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                            | `[]`            |
-| `extraVolumes`                          | Optionally specify extra list of additional volumes for PhpMyAdmin pods                   | `[]`            |
-| `extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for PhpMyAdmin container(s)      | `[]`            |
-| `initContainers`                        | Add init containers to the PhpMyAdmin pods                                                | `[]`            |
-| `sidecars`                              | Add sidecar containers to the PhpMyAdmin pods                                             | `[]`            |
+| Name                                                | Description                                                                               | Value            |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------- |
+| `hostAliases`                                       | Deployment pod host aliases                                                               | `[]`             |
+| `containerPorts.http`                               | HTTP port to expose at container level                                                    | `8080`           |
+| `containerPorts.https`                              | HTTPS port to expose at container level                                                   | `8443`           |
+| `updateStrategy.type`                               | Strategy to use to update Pods                                                            | `RollingUpdate`  |
+| `podSecurityContext.enabled`                        | Enable phpMyAdmin pods' Security Context                                                  | `true`           |
+| `podSecurityContext.fsGroup`                        | User ID for the container                                                                 | `1001`           |
+| `containerSecurityContext.enabled`                  | Enabled containers' Security Context                                                      | `true`           |
+| `containerSecurityContext.runAsUser`                | Set containers' Security Context runAsUser                                                | `1001`           |
+| `containerSecurityContext.runAsNonRoot`             | Set container's Security Context runAsNonRoot                                             | `true`           |
+| `containerSecurityContext.privileged`               | Set container's Security Context privileged                                               | `false`          |
+| `containerSecurityContext.readOnlyRootFilesystem`   | Set container's Security Context readOnlyRootFilesystem                                   | `false`          |
+| `containerSecurityContext.allowPrivilegeEscalation` | Set container's Security Context allowPrivilegeEscalation                                 | `false`          |
+| `containerSecurityContext.capabilities.drop`        | List of capabilities to be dropped                                                        | `["ALL"]`        |
+| `containerSecurityContext.seccompProfile.type`      | Set container's Security Context seccomp profile                                          | `RuntimeDefault` |
+| `resources.limits`                                  | The resources limits for the PhpMyAdmin container                                         | `{}`             |
+| `resources.requests`                                | The requested resources for the PhpMyAdmin container                                      | `{}`             |
+| `startupProbe.enabled`                              | Enable startupProbe                                                                       | `false`          |
+| `startupProbe.httpGet.path`                         | Request path for startupProbe                                                             | `/`              |
+| `startupProbe.httpGet.port`                         | Port for startupProbe                                                                     | `http`           |
+| `startupProbe.initialDelaySeconds`                  | Initial delay seconds for startupProbe                                                    | `30`             |
+| `startupProbe.periodSeconds`                        | Period seconds for startupProbe                                                           | `10`             |
+| `startupProbe.timeoutSeconds`                       | Timeout seconds for startupProbe                                                          | `30`             |
+| `startupProbe.failureThreshold`                     | Failure threshold for startupProbe                                                        | `6`              |
+| `startupProbe.successThreshold`                     | Success threshold for startupProbe                                                        | `1`              |
+| `livenessProbe.enabled`                             | Enable livenessProbe                                                                      | `true`           |
+| `livenessProbe.httpGet.path`                        | Request path for livenessProbe                                                            | `/`              |
+| `livenessProbe.httpGet.port`                        | Port for livenessProbe                                                                    | `http`           |
+| `livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                   | `30`             |
+| `livenessProbe.periodSeconds`                       | Period seconds for livenessProbe                                                          | `10`             |
+| `livenessProbe.timeoutSeconds`                      | Timeout seconds for livenessProbe                                                         | `30`             |
+| `livenessProbe.failureThreshold`                    | Failure threshold for livenessProbe                                                       | `6`              |
+| `livenessProbe.successThreshold`                    | Success threshold for livenessProbe                                                       | `1`              |
+| `readinessProbe.enabled`                            | Enable readinessProbe                                                                     | `true`           |
+| `readinessProbe.httpGet.path`                       | Request path for readinessProbe                                                           | `/`              |
+| `readinessProbe.httpGet.port`                       | Port for readinessProbe                                                                   | `http`           |
+| `readinessProbe.initialDelaySeconds`                | Initial delay seconds for readinessProbe                                                  | `30`             |
+| `readinessProbe.periodSeconds`                      | Period seconds for readinessProbe                                                         | `10`             |
+| `readinessProbe.timeoutSeconds`                     | Timeout seconds for readinessProbe                                                        | `30`             |
+| `readinessProbe.failureThreshold`                   | Failure threshold for readinessProbe                                                      | `6`              |
+| `readinessProbe.successThreshold`                   | Success threshold for readinessProbe                                                      | `1`              |
+| `customStartupProbe`                                | Override default startup probe                                                            | `{}`             |
+| `customLivenessProbe`                               | Override default liveness probe                                                           | `{}`             |
+| `customReadinessProbe`                              | Override default readiness probe                                                          | `{}`             |
+| `podLabels`                                         | Extra labels for PhpMyAdmin pods                                                          | `{}`             |
+| `podAnnotations`                                    | Annotations for PhpMyAdmin pods                                                           | `{}`             |
+| `podAffinityPreset`                                 | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`       | `""`             |
+| `podAntiAffinityPreset`                             | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`  | `soft`           |
+| `nodeAffinityPreset.type`                           | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard` | `""`             |
+| `nodeAffinityPreset.key`                            | Node label key to match. Ignored if `affinity` is set.                                    | `""`             |
+| `nodeAffinityPreset.values`                         | Node label values to match. Ignored if `affinity` is set.                                 | `[]`             |
+| `affinity`                                          | Affinity for pod assignment. Evaluated as a template.                                     | `{}`             |
+| `nodeSelector`                                      | Node labels for pod assignment. Evaluated as a template.                                  | `{}`             |
+| `tolerations`                                       | Tolerations for pod assignment. Evaluated as a template.                                  | `[]`             |
+| `priorityClassName`                                 | phpmyadmin pods' priorityClassName                                                        | `""`             |
+| `schedulerName`                                     | Name of the k8s scheduler (other than default)                                            | `""`             |
+| `topologySpreadConstraints`                         | Topology Spread Constraints for pod assignment                                            | `[]`             |
+| `extraVolumes`                                      | Optionally specify extra list of additional volumes for PhpMyAdmin pods                   | `[]`             |
+| `extraVolumeMounts`                                 | Optionally specify extra list of additional volumeMounts for PhpMyAdmin container(s)      | `[]`             |
+| `initContainers`                                    | Add init containers to the PhpMyAdmin pods                                                | `[]`             |
+| `sidecars`                                          | Add sidecar containers to the PhpMyAdmin pods                                             | `[]`             |
 
 ### Traffic Exposure parameters
 
@@ -210,35 +218,34 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ### Metrics parameters
 
-| Name                                       | Description                                                                                                     | Value                     |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `metrics.enabled`                          | Start a side-car prometheus exporter                                                                            | `false`                   |
-| `metrics.image.registry`                   | Apache exporter image registry                                                                                  | `docker.io`               |
-| `metrics.image.repository`                 | Apache exporter image repository                                                                                | `bitnami/apache-exporter` |
-| `metrics.image.tag`                        | Apache exporter image tag (immutable tags are recommended)                                                      | `1.0.1-debian-11-r2`      |
-| `metrics.image.digest`                     | Apache exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                      |
-| `metrics.image.pullPolicy`                 | Image pull policy                                                                                               | `IfNotPresent`            |
-| `metrics.image.pullSecrets`                | Specify docker-registry secret names as an array                                                                | `[]`                      |
-| `metrics.resources`                        | Metrics exporter resource requests and limits                                                                   | `{}`                      |
-| `metrics.service.type`                     | Prometheus metrics service type                                                                                 | `ClusterIP`               |
-| `metrics.service.port`                     | Prometheus metrics service port                                                                                 | `9117`                    |
-| `metrics.service.annotations`              | Annotations for Prometheus metrics service                                                                      | `{}`                      |
-| `metrics.service.clusterIP`                | phpmyadmin service Cluster IP                                                                                   | `""`                      |
-| `metrics.service.loadBalancerIP`           | Load Balancer IP if the Prometheus metrics server type is `LoadBalancer`                                        | `""`                      |
-| `metrics.service.loadBalancerSourceRanges` | phpmyadmin service Load Balancer sources                                                                        | `[]`                      |
-| `metrics.service.externalTrafficPolicy`    | phpmyadmin service external traffic policy                                                                      | `Cluster`                 |
-| `metrics.service.sessionAffinity`          | Session Affinity for Kubernetes service, can be "None" or "ClientIP"                                            | `None`                    |
-| `metrics.service.sessionAffinityConfig`    | Additional settings for the sessionAffinity                                                                     | `{}`                      |
-| `metrics.serviceMonitor.enabled`           | Create ServiceMonitor Resource for scraping metrics using PrometheusOperator                                    | `false`                   |
-| `metrics.serviceMonitor.namespace`         | Specify the namespace in which the serviceMonitor resource will be created                                      | `""`                      |
-| `metrics.serviceMonitor.jobLabel`          | The name of the label on the target service to use as the job name in prometheus.                               | `""`                      |
-| `metrics.serviceMonitor.interval`          | Specify the interval at which metrics should be scraped                                                         | `30s`                     |
-| `metrics.serviceMonitor.scrapeTimeout`     | Specify the timeout after which the scrape is ended                                                             | `""`                      |
-| `metrics.serviceMonitor.relabelings`       | RelabelConfigs to apply to samples before scraping                                                              | `[]`                      |
-| `metrics.serviceMonitor.metricRelabelings` | Specify Metric Relabelings to add to the scrape endpoint                                                        | `[]`                      |
-| `metrics.serviceMonitor.labels`            | Extra labels for the ServiceMonitor                                                                             | `{}`                      |
-| `metrics.serviceMonitor.honorLabels`       | Specify honorLabels parameter to add the scrape endpoint                                                        | `false`                   |
-| `metrics.serviceMonitor.selector`          | ServiceMonitor selector labels                                                                                  | `{}`                      |
+| Name                                       | Description                                                                                                     | Value                             |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| `metrics.enabled`                          | Start a side-car prometheus exporter                                                                            | `false`                           |
+| `metrics.image.registry`                   | Apache exporter image registry                                                                                  | `REGISTRY_NAME`                   |
+| `metrics.image.repository`                 | Apache exporter image repository                                                                                | `REPOSITORY_NAME/apache-exporter` |
+| `metrics.image.digest`                     | Apache exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                              |
+| `metrics.image.pullPolicy`                 | Image pull policy                                                                                               | `IfNotPresent`                    |
+| `metrics.image.pullSecrets`                | Specify docker-registry secret names as an array                                                                | `[]`                              |
+| `metrics.resources`                        | Metrics exporter resource requests and limits                                                                   | `{}`                              |
+| `metrics.service.type`                     | Prometheus metrics service type                                                                                 | `ClusterIP`                       |
+| `metrics.service.port`                     | Prometheus metrics service port                                                                                 | `9117`                            |
+| `metrics.service.annotations`              | Annotations for Prometheus metrics service                                                                      | `{}`                              |
+| `metrics.service.clusterIP`                | phpmyadmin service Cluster IP                                                                                   | `""`                              |
+| `metrics.service.loadBalancerIP`           | Load Balancer IP if the Prometheus metrics server type is `LoadBalancer`                                        | `""`                              |
+| `metrics.service.loadBalancerSourceRanges` | phpmyadmin service Load Balancer sources                                                                        | `[]`                              |
+| `metrics.service.externalTrafficPolicy`    | phpmyadmin service external traffic policy                                                                      | `Cluster`                         |
+| `metrics.service.sessionAffinity`          | Session Affinity for Kubernetes service, can be "None" or "ClientIP"                                            | `None`                            |
+| `metrics.service.sessionAffinityConfig`    | Additional settings for the sessionAffinity                                                                     | `{}`                              |
+| `metrics.serviceMonitor.enabled`           | Create ServiceMonitor Resource for scraping metrics using PrometheusOperator                                    | `false`                           |
+| `metrics.serviceMonitor.namespace`         | Specify the namespace in which the serviceMonitor resource will be created                                      | `""`                              |
+| `metrics.serviceMonitor.jobLabel`          | The name of the label on the target service to use as the job name in prometheus.                               | `""`                              |
+| `metrics.serviceMonitor.interval`          | Specify the interval at which metrics should be scraped                                                         | `30s`                             |
+| `metrics.serviceMonitor.scrapeTimeout`     | Specify the timeout after which the scrape is ended                                                             | `""`                              |
+| `metrics.serviceMonitor.relabelings`       | RelabelConfigs to apply to samples before scraping                                                              | `[]`                              |
+| `metrics.serviceMonitor.metricRelabelings` | Specify Metric Relabelings to add to the scrape endpoint                                                        | `[]`                              |
+| `metrics.serviceMonitor.labels`            | Extra labels for the ServiceMonitor                                                                             | `{}`                              |
+| `metrics.serviceMonitor.honorLabels`       | Specify honorLabels parameter to add the scrape endpoint                                                        | `false`                           |
+| `metrics.serviceMonitor.selector`          | ServiceMonitor selector labels                                                                                  | `{}`                              |
 
 ### NetworkPolicy parameters
 
@@ -266,17 +273,20 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 helm install my-release \
-  --set db.host=mymariadb,db.port=3306 oci://registry-1.docker.io/bitnamicharts/phpmyadmin
+  --set db.host=mymariadb,db.port=3306 oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin
 ```
+
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 
 The above command sets the phpMyAdmin to connect to a database in `mymariadb` host and `3306` port respectively.
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
 ```console
-helm install my-release -f values.yaml oci://registry-1.docker.io/bitnamicharts/phpmyadmin
+helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin
 ```
 
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
 ## Configuration and installation details
@@ -289,7 +299,7 @@ Bitnami will release a new chart updating its containers if a new version of the
 
 ### Ingress
 
-This chart provides support for ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application.
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application.
 
 To enable ingress integration, please set `ingress.enabled` to `true`.
 
@@ -392,6 +402,10 @@ Find more information about how to deal with common errors related to Bitnami's 
 
 ## Upgrading
 
+### To 13.0.0
+
+This major release bumps the MariaDB version to 11.1. No major issues are expected during the upgrade.
+
 ### To 12.0.0
 
 This major release bumps the MariaDB version to 11.0. Follow the [upstream instructions](https://mariadb.com/kb/en/upgrading-from-mariadb-10-11-to-mariadb-11-0/) for upgrading from MariaDB 10.11 to 11.0. No major issues are expected during the upgrade.
@@ -428,8 +442,10 @@ Consequences:
 export MARIADB_ROOT_PASSWORD=$(kubectl get secret --namespace default phpmyadmin-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d)
 export MARIADB_PASSWORD=$(kubectl get secret --namespace default phpmyadmin-mariadb -o jsonpath="{.data.mariadb-password}" | base64 -d)
 kubectl delete deployments.apps phpmyadmin
-helm upgrade phpmyadmin oci://registry-1.docker.io/bitnamicharts/phpmyadmin --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD,mariadb.auth.password=$MARIADB_PASSWORD
+helm upgrade phpmyadmin oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD,mariadb.auth.password=$MARIADB_PASSWORD
 ```
+
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 
 ### To 7.0.0
 
@@ -493,8 +509,10 @@ Delete the phpMyAdmin deployment and delete the MariaDB statefulsets:
 Now the upgrade works:
 
 ```console
-helm upgrade phpmyadmin oci://registry-1.docker.io/bitnamicharts/phpmyadmin --set mariadb.primary.persistence.existingClaim=$MARIADB_PVC --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD --set mariadb.auth.password=$MARIADB_PASSWORD --set db.bundleTestDB=true
+helm upgrade phpmyadmin oci://REGISTRY_NAME/REPOSITORY_NAME/phpmyadmin --set mariadb.primary.persistence.existingClaim=$MARIADB_PVC --set mariadb.auth.rootPassword=$MARIADB_ROOT_PASSWORD --set mariadb.auth.password=$MARIADB_PASSWORD --set db.bundleTestDB=true
 ```
+
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
 
 Finally, you should see the lines below in MariaDB container logs:
 
